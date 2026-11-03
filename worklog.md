@@ -1,6 +1,6 @@
 # Work Log
 
-## Task 4 - API Route Files for Hardware POS/ERP System
+## Task 4: API Route Files for Hardware POS/ERP System
 **Date**: 2025-07-14
 **Status**: Completed
 
@@ -36,7 +36,7 @@ Created 14 API route files implementing the complete backend API for the Hardwar
 
 ---
 
-## Task 5 - Full POS/ERP Rebuild with Collapsible Sidebar & Auto Error Reporting
+## Task 5: Full POS/ERP Rebuild with Collapsible Sidebar & Auto Error Reporting
 **Date**: 2025-07-14
 **Status**: Completed
 **GitHub**: https://github.com/bucky-ops/hardware-pos-erp
@@ -45,7 +45,7 @@ Created 14 API route files implementing the complete backend API for the Hardwar
 
 The codebase was completely rebuilt from scratch (previous session's code was lost). The rebuild includes:
 
-1. **Prisma Schema** — 14 models: Category, Product, SerialNumber, Customer, Supplier, Sale, SaleItem, Payment, Purchase, PurchaseItem, StockAdjustment, Expense, StoreSettings, ErrorLog
+1. **Prisma Schema**: 14 models: Category, Product, SerialNumber, Customer, Supplier, Sale, SaleItem, Payment, Purchase, PurchaseItem, StockAdjustment, Expense, StoreSettings, ErrorLog
 
 2. **Collapsible Sidebar Navigation**
    - Desktop: Full-width sidebar (260px) with 12 nav items, collapsible to icon-only mode (68px) via toggle button
@@ -91,7 +91,7 @@ The codebase was completely rebuilt from scratch (previous session's code was lo
 
 ---
 
-## Task 2 - MbumahErrorHandler: Centralized Structured Error Handling System
+## Task 2: MbumahErrorHandler: Centralized Structured Error Handling System
 **Date**: 2025-07-14
 **Status**: Completed
 
@@ -122,7 +122,7 @@ Created a centralized, structured error handling system spanning server-side cla
 
 ---
 
-## Task 3-a — Migrate All 15 API Routes to Centralized Error Handler
+## Task 3-a: Migrate All 15 API Routes to Centralized Error Handler
 **Date**: 2025-07-14
 **Status**: Completed
 
@@ -151,7 +151,7 @@ Updated all 15 API route files (excluding the root `api/route.ts` which has no e
 
 ### Key Transformation Patterns Applied
 
-**Pattern 1 — Simple catch replacement:**
+**Pattern 1: Simple catch replacement:**
 ```typescript
 // BEFORE
 } catch (error) {
@@ -164,7 +164,7 @@ Updated all 15 API route files (excluding the root `api/route.ts` which has no e
 }
 ```
 
-**Pattern 2 — Known error → throw ApiError (caught by toErrorResponse):**
+**Pattern 2: Known error → throw ApiError (caught by toErrorResponse):**
 ```typescript
 // BEFORE
 if (!product) {
@@ -176,7 +176,7 @@ if (!product) {
 }
 ```
 
-**Pattern 3 — Structured response with extra fields (sales 422):**
+**Pattern 3: Structured response with extra fields (sales 422):**
 ```typescript
 const err = new ApiError('Some items are invalid', ErrorCode.PRODUCTS_INVALID);
 return NextResponse.json({
@@ -188,7 +188,7 @@ return NextResponse.json({
 }, { status: err.statusCode });
 ```
 
-**Pattern 4 — Transaction-internal error throwing (purchases/[id]):**
+**Pattern 4: Transaction-internal error throwing (purchases/[id]):**
 ```typescript
 // BEFORE: throw new Error('Purchase not found') + manual catch message check
 // AFTER: throw new ApiError('Purchase not found', ErrorCode.NOT_FOUND) inside tx, toErrorResponse in catch
@@ -207,7 +207,7 @@ return NextResponse.json({
 
 ---
 
-## Task 6 — Fix UNKNOWN_ERROR: MbumahErrorHandler Integration, POS Bug Fixes, Version 1.0.0
+## Task 6: Fix UNKNOWN_ERROR: MbumahErrorHandler Integration, POS Bug Fixes, Version 1.0.0
 **Date**: 2025-07-14
 **Status**: Completed
 **Version**: 1.0.0
@@ -216,10 +216,10 @@ return NextResponse.json({
 ### Root Cause Analysis of `[MbumahErrorHandler] UNKNOWN_ERROR`
 
 The deployed system had a centralized error handler (`MbumahErrorHandler`) that wrapped all unhandled errors into `{message, code, statusCode, context, stack}` but:
-1. Every unhandled error became `UNKNOWN_ERROR` with a generic message — no classification
-2. No structured error codes on the server — all routes returned `{error: string}`
+1. Every unhandled error became `UNKNOWN_ERROR` with a generic message: no classification
+2. No structured error codes on the server: all routes returned `{error: string}`
 3. Prisma errors (unique constraint, not found) were not distinguished
-4. No client-side parsing of structured errors — toasts showed raw `errData.error`
+4. No client-side parsing of structured errors: toasts showed raw `errData.error`
 
 ### Additional Bugs Found
 1. **POS terminal field mismatch**: Sent `amountTendered` but API expected `amountPaid`
@@ -254,12 +254,12 @@ The deployed system had a centralized error handler (`MbumahErrorHandler`) that 
 
 ---
 
-## Task 2-b — Store Constants, Error Boundaries, and Defensive API Handling
+## Task 2-b: Store Constants, Error Boundaries, and Defensive API Handling
 **Date**: 2025-07-14
 **Status**: Completed
 
 ### Summary
-Addressed three deployed-version discrepancies: (1) `STORE_LIST` reference error, (2) API 500 on unknown query params, (3) missing section error boundaries. All fixes are additive — no existing logic was changed.
+Addressed three deployed-version discrepancies: (1) `STORE_LIST` reference error, (2) API 500 on unknown query params, (3) missing section error boundaries. All fixes are additive: no existing logic was changed.
 
 ### Files Created/Modified
 
@@ -281,8 +281,8 @@ Addressed three deployed-version discrepancies: (1) `STORE_LIST` reference error
 
 ### Key Design Decisions
 - **Error Boundary** uses class component (React requirement) with functional `SectionErrorBoundary` wrapper for ergonomic usage
-- **Error reporting** integrates with existing `reportError()` from `@/lib/error-reporter` — errors include `[SectionErrorBoundary:{name}]` prefix
-- **No API logic changed** — only added comments documenting that unknown params (like `storeId`) are safely ignored by the existing `searchParams.get()` pattern
+- **Error reporting** integrates with existing `reportError()` from `@/lib/error-reporter`: errors include `[SectionErrorBoundary:{name}]` prefix
+- **No API logic changed**: only added comments documenting that unknown params (like `storeId`) are safely ignored by the existing `searchParams.get()` pattern
 - **Dashboard route** has no `request` parameter, so the comment was placed above the function signature
 - **Store constants** are single-store by default with `StoreLocation` interface ready for multi-store expansion
 

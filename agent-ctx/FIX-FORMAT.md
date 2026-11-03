@@ -5,13 +5,13 @@ Audited all 11 view components and their corresponding API routes. Found and fix
 
 ## Issues Found & Fixed
 
-### 1. `/api/dashboard` — BigInt serialization error (CRITICAL)
+### 1. `/api/dashboard`: BigInt serialization error (CRITICAL)
 - **Root cause**: `todaySalesResult._count` from Prisma aggregate returns BigInt in SQLite, which `JSON.stringify` cannot serialize
 - **Fix**: Wrapped with `Number()`: `count: Number(todaySalesResult._count || 0)`
 - **File**: `src/app/api/dashboard/route.ts` line 50
 
-### 2. `/api/reports` — BigInt serialization error + problematic raw SQL (CRITICAL)
-- **Root cause 1**: Same BigInt issue — `summary._count` and `paymentData._count` from Prisma groupBy/aggregate return BigInt
+### 2. `/api/reports`: BigInt serialization error + problematic raw SQL (CRITICAL)
+- **Root cause 1**: Same BigInt issue: `summary._count` and `paymentData._count` from Prisma groupBy/aggregate return BigInt
 - **Root cause 2**: Original raw SQL used correlated subqueries for cost calculation per day, which was fragile
 - **Fix**: Complete rewrite of the API route:
   - Replaced single complex raw SQL with two simpler queries (daily sales + daily cost via JOIN)
@@ -20,7 +20,7 @@ Audited all 11 view components and their corresponding API routes. Found and fix
   - Converted `paymentData` items' `_count` and `_sum.amount` to Number
 - **File**: `src/app/api/reports/route.ts` (full rewrite)
 
-### 3. `src/components/dashboard/dashboard.tsx` — Unused import (LINT)
+### 3. `src/components/dashboard/dashboard.tsx`: Unused import (LINT)
 - **Root cause**: `Tooltip` imported from `recharts` but `ChartTooltip` from shadcn/ui is used instead
 - **Fix**: Removed unused `Tooltip` from recharts import
 - **File**: `src/components/dashboard/dashboard.tsx` line 15

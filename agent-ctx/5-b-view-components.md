@@ -21,4 +21,4 @@ Created all 11 view components for the Hardware POS/ERP system. All components u
 - **Charts**: Use shadcn/ui `ChartContainer` + `ChartConfig` for theme consistency
 
 ## Lint Result
-`bun run lint` — 0 errors, 0 warnings
+`bun run lint`: 0 errors, 0 warnings

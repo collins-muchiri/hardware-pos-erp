@@ -33,4 +33,4 @@ Created a full-featured `POSTerminal` 'use client' component with all requested 
 - TypeScript compiles without errors
 
 ### Notes
-- The dev log shows module-not-found errors for other components (suppliers, sales, etc.) that are imported in `page.tsx` but not yet created — these are unrelated to this component.
+- The dev log shows module-not-found errors for other components (suppliers, sales, etc.) that are imported in `page.tsx` but not yet created; these are unrelated to this component.
